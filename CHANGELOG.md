@@ -1,0 +1,35 @@
+commit 6cf7a5da669268591bf1e25d8e34fc96e4b19ce1
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sat Jun 14 03:47:40 2025 +0700
+
+    add utilites scripts
+
+commit fa7d16dbdd2fc5eba61f6fc334f1b5be01161cb9
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sat Jun 14 03:44:56 2025 +0700
+
+    add shell nix
+
+commit fe8b8724bfeb99f7f1b1359857004ba57cc19bf5
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sat Jun 14 03:43:24 2025 +0700
+
+    Create static.yml
+
+commit 612fe2aaa1d8f6939b9a12624c6bfbe3b7ac270d
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sat Jun 14 03:42:51 2025 +0700
+
+    add doxyfile
+
+commit 172f55be0fc187c316bb483def3159f8708e0b4c
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sat Jun 14 03:41:17 2025 +0700
+
+    add architecture
+
+commit f6e773f851ee8c6db3b3644cdd86ad82839b6684
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sat Jun 14 03:39:35 2025 +0700
+
+    Initial commit
