@@ -1,5 +1,14 @@
 # Building with CMake
 
+## Simple build script
+Use [build script](./build.sh) script for fast-building project.
+
+```bash
+./build.sh # show usage
+
+./build.sh all # full build
+```
+
 ## Build
 
 This project doesn't require any special command-line flags to build to keep

@@ -1,6 +1,21 @@
 # httpfileserver
 
-This is the httpfileserver project.
+This is the httpfileserver C++ project using boost library.
+
+# Simple usage
+
+ + build:
+
+```bash
+./build.sh all
+```
+
+ + run:
+
+```bash
+./build/bin/httpfileserver ~/Downloads 8000 # share ~/Downloads dir in 127.0.0.1:8000
+# ./build/bin/httpfileserver <path-to-dir> <port>
+```
 
 # Building and installing
 

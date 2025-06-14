@@ -1,3 +1,21 @@
+commit d73a0ff681e79cb50367ec838c2fd00400a11948
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sat Jun 14 14:20:36 2025 +0700
+
+    realize HTTP server
+
+commit 72326c662d109dec60fea54d1b9b2742b861e9a2
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sat Jun 14 04:02:22 2025 +0700
+
+    update docs
+
+commit 86306dc7d059a40cba27f39ee679451adf7539ed
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sat Jun 14 03:53:15 2025 +0700
+
+    update docs
+
 commit 6cf7a5da669268591bf1e25d8e34fc96e4b19ce1
 Author: Alexeev Bronislav <alexeev.dev@mail.ru>
 Date:   Sat Jun 14 03:47:40 2025 +0700
