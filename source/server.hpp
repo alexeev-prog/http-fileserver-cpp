@@ -26,7 +26,6 @@ class SHServer {
      */
     SHServer(fs::path& root_path, std::uint16_t& port);
 
-  private:
     /**
      * @brief Generate a list of files in the specified directory.
      *
