@@ -10,15 +10,25 @@ project(
     LANGUAGES CXX
 )
 
+find_package(Boost REQUIRED COMPONENTS filesystem system)
+
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE})
 
 # ---- Declare library ----
 
 add_library(
     httpfileserver_lib OBJECT
-    source/lib.cpp
+    source/server.cpp
+    source/server.hpp
 )
+
+include_directories(${Boost_INCLUDE_DIRS})
 
 target_include_directories(
     httpfileserver_lib ${warning_guard}
@@ -38,6 +48,12 @@ set_property(TARGET httpfileserver_exe PROPERTY OUTPUT_NAME httpfileserver)
 target_compile_features(httpfileserver_exe PRIVATE cxx_std_20)
 
 target_link_libraries(httpfileserver_exe PRIVATE httpfileserver_lib)
+
+target_link_libraries(httpfileserver_exe
+        PRIVATE
+        Boost::filesystem
+        Boost::system
+)
 
 # ---- Install rules ----
 

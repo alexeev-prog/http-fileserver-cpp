@@ -1,12 +1,26 @@
+#include <cstdlib>
 #include <iostream>
-#include <string>
 
-#include "lib.hpp"
+#include <boost/filesystem.hpp>
 
-auto main() -> int
-{
-  auto const lib = library {};
-  auto const message = "Hello from " + lib.name + "!";
-  std::cout << message << '\n';
-  return 0;
+#include "server.hpp"
+
+auto main(int argc, char* argv[]) -> int {
+    if (argc != 3) {
+        std::cerr << "Usage: " << argv[0] << " <path_to_directory> <port>" << "\n";
+        return 1;
+    }
+
+    boost::filesystem::path root_path(argv[1]);
+
+    auto port = static_cast<unsigned short>(std::atoi(argv[2]));
+
+    if (!boost::filesystem::exists(root_path) || !boost::filesystem::is_directory(root_path)) {
+        std::cerr << "Invalid directory path" << "\n";
+        return 1;
+    }
+
+    SHServer const server(root_path, port);
+
+    return 0;
 }
