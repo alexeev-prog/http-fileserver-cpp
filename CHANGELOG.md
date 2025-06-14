@@ -1,3 +1,9 @@
+commit 5c30f606f26a6e36349cadb6e4b3c15fd821956c
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sat Jun 14 15:46:33 2025 +0700
+
+    feat: improve page style, improve docs
+
 commit 529bd3f7d01377c55ba5d55cc0e743bfb8fb9a02
 Author: Alexeev Bronislav <alexeev.dev@mail.ru>
 Date:   Sat Jun 14 14:24:30 2025 +0700
