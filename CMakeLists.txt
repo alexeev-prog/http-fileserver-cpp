@@ -26,6 +26,7 @@ add_library(
     httpfileserver_lib OBJECT
     source/server.cpp
     source/server.hpp
+    source/logger.hpp
 )
 
 include_directories(${Boost_INCLUDE_DIRS})

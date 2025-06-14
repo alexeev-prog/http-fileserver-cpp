@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <cstdlib>
 #include <iostream>
 
@@ -13,14 +14,14 @@ auto main(int argc, char* argv[]) -> int {
 
     boost::filesystem::path root_path(argv[1]);
 
-    auto port = static_cast<unsigned short>(std::atoi(argv[2]));
+    auto port = static_cast<std::uint16_t>(std::atoi(argv[2]));
 
     if (!boost::filesystem::exists(root_path) || !boost::filesystem::is_directory(root_path)) {
         std::cerr << "Invalid directory path" << "\n";
         return 1;
     }
 
-    SHServer const server(root_path, port);
+    SHServer const SERVER(root_path, port);
 
     return 0;
 }

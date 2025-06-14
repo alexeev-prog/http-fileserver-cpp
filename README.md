@@ -2,6 +2,8 @@
 
 This is the httpfileserver C++ project using boost library.
 
+![alt text](image.png)
+
 # Simple usage
 
  + build:
