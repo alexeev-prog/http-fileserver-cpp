@@ -1,3 +1,9 @@
+commit 6f6f138792eb9c2cffde064bfab45115a656c0ba
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sun Jun 15 03:55:05 2025 +0700
+
+    fix docs
+
 commit 4140e51ef1eef9001fa2b425f23048339fd7f9f9
 Author: Alexeev Bronislav <alexeev.dev@mail.ru>
 Date:   Sun Jun 15 03:52:51 2025 +0700
