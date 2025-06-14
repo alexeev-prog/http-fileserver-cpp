@@ -1,3 +1,9 @@
+commit e8b43082db69f5824afe57e937a5f76a50460378
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sat Jun 14 15:57:02 2025 +0700
+
+    feat: improve logging, improve docs
+
 commit 691b8386e5d0dd3cc01ca983d18a17733421942c
 Author: Alexeev Bronislav <alexeev.dev@mail.ru>
 Date:   Sat Jun 14 15:48:29 2025 +0700

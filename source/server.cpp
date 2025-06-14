@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <ctime>
@@ -10,12 +9,13 @@
 #include <vector>
 
 #include "server.hpp"
-#include "logger.hpp"
-#include "tracelogger.hpp"
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/range/algorithm/sort.hpp>
+
+#include "logger.hpp"
+#include "tracelogger.hpp"
 
 /**
  * @brief Anonymous namespace for helper functions
@@ -37,12 +37,13 @@ namespace {
             || path.extension() == ".avi" || path.extension() == ".mov" || path.extension() == ".wav")
         {
             return "color: #9C27B0;";
-        } else if (path.extension() == ".exe" || path.extension() == ".bat" || path.extension() == ".msi"
-                || path.extension() == ".sh")
+        }
+        if (path.extension() == ".exe" || path.extension() == ".bat" || path.extension() == ".msi"
+            || path.extension() == ".sh")
         {
             return "color: #FF9800;";
         } else if (path.extension() == ".zip" || path.extension() == ".tar" || path.extension() == ".gz"
-                || path.extension() == ".rar" || path.extension() == ".7z")
+                   || path.extension() == ".rar" || path.extension() == ".7z")
         {
             return "color: #4CAF50;";
         }
@@ -129,7 +130,7 @@ namespace {
 
         return STYLES;
     }
-}
+}    // namespace
 
 /**
  * @brief Construct a new SHServer::SHServer object
@@ -198,8 +199,8 @@ auto SHServer::generate_file_list(const fs::path& current_path) -> std::string {
     html += "<p>Total Files: " + std::to_string(file_count) + "</p>";
     html += "<hr>";
 
-    std::time_t const current_time = std::time(nullptr);
-    std::string current_time_str = std::asctime(std::localtime(&current_time));
+    std::time_t const CURRENT_TIME = std::time(nullptr);
+    std::string current_time_str = std::asctime(std::localtime(&CURRENT_TIME));
     current_time_str.erase(current_time_str.length() - 1);
     html += "<p>Current Server Time: " + current_time_str + "</p>";
     html += "<hr>";
@@ -212,8 +213,8 @@ auto SHServer::generate_file_list(const fs::path& current_path) -> std::string {
     for (const auto& entry : entries) {
         std::string const NAME = entry.first.filename().string();
         std::string const LINK = fs::relative(entry.first, m_ROOT_PATH).string();
-        std::time_t const mod_time = entry.second;
-        std::string date_str = std::asctime(std::localtime(&mod_time));
+        std::time_t const MOD_TIME = entry.second;
+        std::string date_str = std::asctime(std::localtime(&MOD_TIME));
         date_str.erase(date_str.length() - 1);
 
         html += "<tr>";
@@ -235,78 +236,147 @@ auto SHServer::generate_file_list(const fs::path& current_path) -> std::string {
 }
 
 /**
- * @brief Handle HTTP Request
+ * @brief Process the HTTP request by routing it to the appropriate handler.
  *
- * @param root_path root path
- * @param req request
- * @param res response
- * @param socket tcp socket
- **/
+ * This function coordinates the handling of HTTP requests and sends corresponding responses based on the type
+ * of request.
+ *
+ * @param root_path The root directory where files are served from.
+ * @param req The HTTP request object.
+ * @param res The HTTP response object.
+ * @param socket The TCP socket for communication.
+ */
 void SHServer::handle_request(const fs::path& root_path,
                               http::request<http::string_body>& req,
                               http::response<http::string_body>& res,
                               tcp::socket& socket) {
     LOG_TRACE
 
-    std::string target = std::string(req.target());
-
+    std::string const target = std::string(req.target());
     log_info("Handle request for target: %s\n", target.c_str());
 
     if (target.empty() || target == "/") {
-        res.result(http::status::ok);
-        res.body() = generate_file_list(root_path);
-        res.set(http::field::content_type, "text/html");
-        return;
+        SHServer::handle_root_request(root_path, res);
+    } else {
+        fs::path const file_path = sanitize_target(root_path, target);
+        if (fs::is_directory(file_path)) {
+            handle_directory_request(file_path, res);
+        } else if (!fs::exists(file_path) || !fs::is_regular_file(file_path)) {
+            handle_not_found(file_path, res);
+        } else {
+            handle_file_request(file_path, res, socket);
+        }
     }
+}
 
-    target.erase(0, 1);
+/**
+ * @brief Handle requests for the root directory.
+ *
+ * @param root_path The root directory.
+ * @param res The HTTP response object.
+ */
+void SHServer::handle_root_request(const fs::path& root_path, http::response<http::string_body>& res) {
+    res.result(http::status::ok);
+    res.body() = generate_file_list(root_path);
+    res.set(http::field::content_type, "text/html");
+}
 
-    fs::path const FILE_PATH = root_path / target;
+/**
+ * @brief Sanitize the target path for secure access.
+ *
+ * @param root_path The root directory.
+ * @param target The target path from the request.
+ * @return The sanitized file path.
+ */
+auto SHServer::sanitize_target(const fs::path& root_path, const std::string& target) -> fs::path {
+    std::string const sanitized_target = target.substr(1);    // Remove leading '/'
+    return root_path / sanitized_target;
+}
 
-    // If file path is a directory
-    if (fs::is_directory(FILE_PATH)) {
-        log_debug("File path %s is directory\n", FILE_PATH.c_str());
-        res.result(http::status::ok);
-        res.body() = generate_file_list(FILE_PATH);
-        res.set(http::field::content_type, "text/html");
-        return;
-    }
+/**
+ * @brief Handle requests for a directory.
+ *
+ * @param file_path The path to the directory.
+ * @param res The HTTP response object.
+ */
+void SHServer::handle_directory_request(const fs::path& file_path, http::response<http::string_body>& res) {
+    res.result(http::status::ok);
+    res.body() = generate_file_list(file_path);
+    res.set(http::field::content_type, "text/html");
+}
 
-    // If file is not exists
-    if (!fs::exists(FILE_PATH) || !fs::is_regular_file(FILE_PATH)) {
-        log_debug("File path %s is not exists\n", FILE_PATH.c_str());
-        res.result(http::status::not_found);
-        res.body() = "File not found";
-        return;
-    }
+/**
+ * @brief Handle requests for non-existing files.
+ *
+ * @param file_path The path that does not exist.
+ * @param res The HTTP response object.
+ */
+void SHServer::handle_not_found(const fs::path& file_path, http::response<http::string_body>& res) {
+    log_debug("File path %s does not exist\n", file_path.c_str());
+    res.result(http::status::not_found);
+    res.body() = "File not found";
+}
 
-    // If failed to open file
-    std::ifstream file(FILE_PATH.string(), std::ios::binary);
+/**
+ * @brief Handle requests for regular files.
+ *
+ * @param file_path The path to the file.
+ * @param res The HTTP response object.
+ * @param socket The TCP socket for communication.
+ */
+void SHServer::handle_file_request(const fs::path& file_path,
+                                   http::response<http::string_body>& res,
+                                   tcp::socket& socket) {
+    log_debug("Attempting to open file: %s\n", file_path.c_str());
+
+    std::ifstream file(file_path.string(), std::ios::binary);
     if (!file) {
-        log_debug("File path %s is failed to open\n", FILE_PATH.c_str());
+        log_debug("Failed to open file: %s\n", file_path.c_str());
         res.result(http::status::internal_server_error);
         res.body() = "Failed to open file";
         return;
     }
 
-    // Configure response
+    configure_response_for_file(file_path, res);
+    send_file_content(file, res, socket);
+}
+
+/**
+
+ * @brief Configure the HTTP response for a file download.
+ *
+ * @param file_path The path of the file being requested.
+ * @param res The HTTP response object.
+ */
+void SHServer::configure_response_for_file(const fs::path& file_path,
+                                           http::response<http::string_body>& res) {
     res.result(http::status::ok);
     res.set(http::field::content_type, "application/octet-stream");
     res.set(http::field::content_disposition,
-            "attachment; filename=\"" + FILE_PATH.filename().string() + "\"");
+            "attachment; filename=\"" + file_path.filename().string() + "\"");
+}
 
+/**
+ * @brief Send the content of the file in chunks through the socket.
+ *
+ * @param file The input file stream.
+ * @param res The HTTP response object.
+ * @param socket The TCP socket for communication.
+ */
+void SHServer::send_file_content(std::ifstream& file,
+                                 http::response<http::string_body>& res,
+                                 tcp::socket& socket) {
     constexpr size_t buffer_size = 8192;
     char buffer[buffer_size];
-
-    log_debug("Open buffer (%zu) for %s\n", buffer_size, FILE_PATH.c_str());
+    log_debug("Open buffer (%zu) for file transfer\n", buffer_size);
 
     try {
         while (file) {
             file.read(buffer, buffer_size);
-            std::streamsize const BYTES_READ = file.gcount();
+            std::streamsize const bytes_read = file.gcount();
 
-            if (BYTES_READ > 0) {
-                res.body() = std::string(buffer, buffer + BYTES_READ);
+            if (bytes_read > 0) {
+                res.body() = std::string(buffer, buffer + bytes_read);
                 http::write(socket, res);
             }
         }
@@ -314,7 +384,6 @@ void SHServer::handle_request(const fs::path& root_path,
         log_error("Error reading or sending file: %s\n", e.what());
         res.result(http::status::internal_server_error);
         res.body() = "Error reading or sending file: " + std::string(e.what());
-        return;
     }
 }
 

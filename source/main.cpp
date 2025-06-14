@@ -2,10 +2,10 @@
 #include <cstdlib>
 #include <iostream>
 
+#include <boost/filesystem.hpp>
+
 #include "server.hpp"
 #include "tracelogger.hpp"
-
-#include <boost/filesystem.hpp>
 
 auto main(int argc, char* argv[]) -> int {
     LOG_TRACE
