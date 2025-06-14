@@ -1,3 +1,9 @@
+commit 4140e51ef1eef9001fa2b425f23048339fd7f9f9
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sun Jun 15 03:52:51 2025 +0700
+
+    improve code style, improve code reability, add docstring
+
 commit e8b43082db69f5824afe57e937a5f76a50460378
 Author: Alexeev Bronislav <alexeev.dev@mail.ru>
 Date:   Sat Jun 14 15:57:02 2025 +0700
