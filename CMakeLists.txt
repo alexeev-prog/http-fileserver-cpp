@@ -27,6 +27,9 @@ add_library(
     source/server.cpp
     source/server.hpp
     source/logger.hpp
+    source/tracelogger.hpp
+    source/tracelogger.cpp
+    source/_default.hpp
 )
 
 include_directories(${Boost_INCLUDE_DIRS})

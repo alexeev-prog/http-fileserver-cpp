@@ -10,12 +10,12 @@
 #include <vector>
 
 #include "server.hpp"
+#include "logger.hpp"
+#include "tracelogger.hpp"
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/range/algorithm/sort.hpp>
-
-#include "logger.hpp"
 
 /**
  * @brief Anonymous namespace for helper functions
@@ -49,6 +49,11 @@ namespace {
         return "color: #FFFFFF;";
     }
 
+    /**
+     * @brief Construct CSS Styles
+     *
+     * @return std::string
+     **/
     auto construct_css_styles() -> std::string {
         std::string const STYLES = R"(
 <style>
@@ -135,6 +140,8 @@ namespace {
 SHServer::SHServer(fs::path& root_path, std::uint16_t& port)
     : m_ROOT_PATH(root_path)
     , m_PORT(port) {
+    LOG_TRACE
+
     run_server();
 }
 
@@ -145,6 +152,8 @@ SHServer::SHServer(fs::path& root_path, std::uint16_t& port)
  * @return std::string html page
  **/
 auto SHServer::generate_file_list(const fs::path& current_path) -> std::string {
+    LOG_TRACE
+
     std::string const BASE_LINK = fs::relative(current_path, m_ROOT_PATH).string();
     log_debug("Generate file list HTML page for: %s\n", BASE_LINK.c_str());
 
@@ -237,6 +246,8 @@ void SHServer::handle_request(const fs::path& root_path,
                               http::request<http::string_body>& req,
                               http::response<http::string_body>& res,
                               tcp::socket& socket) {
+    LOG_TRACE
+
     std::string target = std::string(req.target());
 
     log_info("Handle request for target: %s\n", target.c_str());
@@ -312,6 +323,8 @@ void SHServer::handle_request(const fs::path& root_path,
  *
  **/
 void SHServer::run_server() {
+    LOG_TRACE
+
     try {
         net::io_context ioc;
 

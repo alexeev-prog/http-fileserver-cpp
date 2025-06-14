@@ -2,11 +2,14 @@
 #include <cstdlib>
 #include <iostream>
 
+#include "server.hpp"
+#include "tracelogger.hpp"
+
 #include <boost/filesystem.hpp>
 
-#include "server.hpp"
-
 auto main(int argc, char* argv[]) -> int {
+    LOG_TRACE
+
     if (argc != 3) {
         std::cerr << "Usage: " << argv[0] << " <path_to_directory> <port>" << "\n";
         return 1;
