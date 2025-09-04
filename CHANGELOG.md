@@ -1,3 +1,9 @@
+commit 8071783284434897421bb65642778ff01f328adb
+Author: Alexeev Bronislav <alexeev.dev@mail.ru>
+Date:   Sun Jun 15 04:09:00 2025 +0700
+
+    remove private
+
 commit 575ee2c79be83abb192bfa44720789f8ba04cae0
 Author: Alexeev Bronislav <alexeev.dev@mail.ru>
 Date:   Sun Jun 15 04:00:14 2025 +0700

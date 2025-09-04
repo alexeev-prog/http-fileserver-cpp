@@ -122,8 +122,7 @@ class SHServer {
      * @param file_path The path of the file being requested.
      * @param res The HTTP response object to modify.
      */
-    void configure_response_for_file(const fs::path& file_path,
-                                      http::response<http::string_body>& res);
+    void configure_response_for_file(const fs::path& file_path, http::response<http::string_body>& res);
 
     /**
      * @brief Send the content of a file in chunks to the client.
@@ -135,9 +134,7 @@ class SHServer {
      * @param res The HTTP response object to populate.
      * @param socket The TCP socket used for sending the file content.
      */
-    void send_file_content(std::ifstream& file,
-                           http::response<http::string_body>& res,
-                           tcp::socket& socket);
+    void send_file_content(std::ifstream& file, http::response<http::string_body>& res, tcp::socket& socket);
 
     /**
      * @brief Run the server to start accepting connections.
@@ -168,4 +165,3 @@ class SHServer {
      */
     net::io_context m_DEFAULT_IOC;
 };
-
